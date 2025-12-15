@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/member_provider.dart';
 import 'providers/attendance_provider.dart';
+import 'providers/attendance_report_provider.dart'; // 🔥 WAJIB
 import 'screens/auth/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'providers/attendance_report_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +27,7 @@ void main() async {
   runApp(const MyApp());
 }
 
-/// ✅ ROOT APP
+/// ================= ROOT APP =================
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -36,38 +38,27 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => MemberProvider()),
         ChangeNotifierProvider(create: (_) => AttendanceProvider()),
+        ChangeNotifierProvider(create: (_) => AttendanceReportProvider()), // ✅
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Absensi HMPS-SI 2025',
-
-        // ✅ TEMA MODERN & AMAN
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.indigo,
-          ),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
           appBarTheme: const AppBarTheme(
             centerTitle: true,
-            elevation: 0,
             backgroundColor: Colors.indigo,
             foregroundColor: Colors.white,
           ),
-         
-          inputDecorationTheme: InputDecorationTheme(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
         ),
-
         home: const AuthGate(),
       ),
     );
   }
 }
 
-/// ✅ AUTH GATE (LOGIN / HOME)
+/// ================= AUTH GATE =================
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
@@ -85,9 +76,9 @@ class AuthGate extends StatelessWidget {
         }
 
         if (snapshot.hasData) {
-          return HomeScreen();
+          return const HomeScreen();
         } else {
-          return LoginScreen();
+          return const LoginScreen();
         }
       },
     );

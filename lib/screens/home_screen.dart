@@ -14,112 +14,63 @@ class HomeScreen extends StatelessWidget {
     final auth = Provider.of<AuthProvider>(context, listen: false);
 
     return Scaffold(
-      // ================= APP BAR =================
+      backgroundColor: const Color(0xFFF5F7FA),
+
+      // ================= APPBAR GRADIENT =================
       appBar: AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.white,
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/images/logo.jpeg',
-                  fit: BoxFit.contain,
-                  width: 28,
-                  height: 28,
-                ),
-              ),
+        title: const Text('Dashboard'),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF3F51B5), // Indigo
+                Color(0xFF2196F3), // Biru
+              ],
             ),
-            const SizedBox(width: 12),
-            const Text('ABSENSI HMPS-SI 2025'),
-          ],
+          ),
         ),
       ),
 
-      // ================= DRAWER =================
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: GridView.count(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
           children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Colors.indigo,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 36,
-                    backgroundColor: Colors.white,
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/logo.jpeg',
-                        fit: BoxFit.contain,
-                        width: 60,
-                        height: 60,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'ABSENSI HMPS-SI 2025',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            ListTile(
-              leading: const Icon(Icons.group),
-              title: const Text('Data Anggota'),
+            _DashboardCard(
+              title: 'Data Anggota',
+              icon: Icons.group,
               onTap: () {
-                Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const MembersListScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const MembersListScreen()),
                 );
               },
             ),
-
-            ListTile(
-              leading: const Icon(Icons.check_circle_outline),
-              title: const Text('Absensi'),
+            _DashboardCard(
+              title: 'Absensi',
+              icon: Icons.check_circle_outline,
               onTap: () {
-                Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const AttendanceScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const AttendanceScreen()),
                 );
               },
             ),
-
-            ListTile(
-              leading: const Icon(Icons.bar_chart),
-              title: const Text('Laporan Absensi'),
+            _DashboardCard(
+              title: 'Laporan',
+              icon: Icons.bar_chart,
               onTap: () {
-                Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => AttendanceReportScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => AttendanceReportScreen()),
                 );
               },
             ),
-
-            const Divider(),
-
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
+            _DashboardCard(
+              title: 'Logout',
+              icon: Icons.logout,
               onTap: () async {
                 await auth.signOut();
               },
@@ -127,110 +78,50 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-
-      // ================= HOME CONTENT =================
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Selamat Datang 👋',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Sistem Absensi Himpunan Mahasiswa Program Studi Sistem Informasi 2025',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 32),
-
-              _HomeCard(
-                icon: Icons.group,
-                color: Colors.indigo,
-                title: 'Data Anggota',
-                subtitle: 'Tambah, edit, dan hapus anggota',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const MembersListScreen(),
-                    ),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              _HomeCard(
-                icon: Icons.check_circle_outline,
-                color: Colors.green,
-                title: 'Absensi',
-                subtitle: 'Catat kehadiran anggota',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const AttendanceScreen(),
-                    ),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              _HomeCard(
-                icon: Icons.bar_chart,
-                color: Colors.orange,
-                title: 'Laporan Absensi',
-                subtitle: 'Lihat hasil absensi per tanggal',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => AttendanceReportScreen(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
 
-// ================= CARD WIDGET =================
-class _HomeCard extends StatelessWidget {
-  final IconData icon;
-  final Color color;
+// ================= CARD =================
+class _DashboardCard extends StatelessWidget {
   final String title;
-  final String subtitle;
+  final IconData icon;
   final VoidCallback onTap;
 
-  const _HomeCard({
-    required this.icon,
-    required this.color,
+  const _DashboardCard({
     required this.title,
-    required this.subtitle,
+    required this.icon,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 1,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.15),
-          child: Icon(icon, color: color),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF3F51B5), Color(0xFF2196F3)],
+          ),
+          borderRadius: BorderRadius.circular(20),
         ),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 36),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
